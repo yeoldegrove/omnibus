@@ -172,7 +172,7 @@ module Omnibus
       if null?(val)
         @install_dir || raise(MissingRequiredAttribute.new(self, :install_dir, '/opt/chef'))
       else
-        @install_dir = val.gsub('\\', '/').squeeze('/').chomp('/')
+        @install_dir = File.expand_path(val.gsub('\\', '/').squeeze('/').chomp('/'))
       end
     end
     expose :install_dir

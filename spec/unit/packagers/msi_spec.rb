@@ -6,7 +6,7 @@ module Omnibus
       Project.new.tap do |project|
         project.name('project')
         project.homepage('https://example.com')
-        project.install_dir('C:/project')
+        project.install_dir('/project')
         project.build_version('1.2.3')
         project.build_iteration('2')
         project.maintainer('Chef Software <maintainers@chef.io>')
@@ -140,7 +140,7 @@ module Omnibus
       end
 
       it 'has the correct content' do
-        project.install_dir('C:/foo/bar/blip')
+        project.install_dir('/foo/bar/blip')
         subject.write_source_file
         contents = File.read("#{staging_dir}/source.wxs")
 
