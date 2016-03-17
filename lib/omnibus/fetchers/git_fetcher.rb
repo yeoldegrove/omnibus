@@ -203,7 +203,7 @@ module Omnibus
     #   the shellout object
     #
     def git(command)
-      shellout!("git #{command}", cwd: project_dir)
+      shellout!("git -c core.autocrlf=false #{command}", cwd: project_dir)
     end
 
     # Class methods
