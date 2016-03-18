@@ -559,18 +559,7 @@ module Omnibus
     # @return [String]
     #
     def safe_architecture
-      case Ohai['kernel']['machine']
-      when 'i686'
-        'i386'
-      when 'armv6l'
-        if Ohai['platform'] == 'pidora'
-          'armv6hl'
-        else
-          'armv6l'
-        end
-      else
-        Ohai['kernel']['machine']
-      end
+      return `rpmspec -E "%{_arch}"`.strip()
     end
   end
 end
