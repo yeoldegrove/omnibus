@@ -280,6 +280,8 @@ module Omnibus
             "be a kind of `Hash', but was `#{val.class.inspect}'")
         end
 
+        val = canonicalize_source(val)
+
         extra_keys = val.keys - [
           :git, :path, :url, # fetcher types
           :md5, :sha1, :sha256, :sha512, # hash type - common to all fetchers
@@ -302,7 +304,8 @@ module Omnibus
         @source.merge!(val)
       end
 
-      apply_overrides(:source)
+      override = canonicalize_source(overrides[:source])
+      apply_overrides(:source, override)
     end
     expose :source
 
@@ -1077,15 +1080,26 @@ module Omnibus
     # Apply overrides in the @overrides hash that mask instance variables
     # that are set by parsing the DSL
     #
-    def apply_overrides(attr)
+    def apply_overrides(attr, override=overrides[attr])
       val = instance_variable_get(:"@#{attr}")
-      if val.is_a?(Hash) || overrides[attr].is_a?(Hash)
+      if val.is_a?(Hash) || override.is_a?(Hash)
         val ||= {}
-        override = overrides[attr] || {}
+        override ||= {}
         val.merge(override)
       else
-        overrides[attr] || val
+        override || val
       end
+    end
+
+    #
+    # Transform github -> git in source
+    #
+    def canonicalize_source(source)
+      if source.is_a?(Hash) && source[:github]
+        source[:git] = "https://github.com/#{source[:github]}.git"
+        source.delete(:github)
+      end
+      source
     end
 
     #
