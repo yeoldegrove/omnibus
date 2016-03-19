@@ -120,7 +120,7 @@ module Omnibus
         expect(contents).to include("Version: 1.2.3")
         expect(contents).to include("License: unknown")
         expect(contents).to include("Vendor: Omnibus <omnibus@getchef.com>")
-        expect(contents).to include("Architecture: amd64")
+        expect(contents).to match(/^Architecture: .+$/)
         expect(contents).to include("Maintainer: Chef Software")
         expect(contents).to include("Installed-Size: 0")
         expect(contents).to include("Section: misc")
