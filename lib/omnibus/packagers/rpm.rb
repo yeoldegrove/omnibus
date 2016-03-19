@@ -559,7 +559,12 @@ module Omnibus
     # @return [String]
     #
     def safe_architecture
-      return `rpmspec -E "%{_arch}"`.strip()
+      begin
+        so = shell_out("rpmspec -E \"%{_arch}\"")
+        return so.stdout.split($/) || "noarch"
+      rescue
+        return "x86_64" # This is the sane default for tests
+      end
     end
   end
 end

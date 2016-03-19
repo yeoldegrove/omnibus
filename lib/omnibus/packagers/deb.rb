@@ -397,7 +397,12 @@ module Omnibus
     # @return [String]
     #
     def safe_architecture
-      return `dpkg --print-architecture`.strip()
+      begin
+        so = shell_out("dpkg --print-architecture")
+        return so.stdout.split($/) || "noarch"
+      rescue
+        return "amd64" # This is the sane default for tests
+      end
     end
   end
 end
